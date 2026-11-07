@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Quiet Night</title>
+<meta name="theme-color" content="#5a49b8">
+<meta name="description" content="A calm, uncluttered wind-down companion for anxious nights.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>
+@font-face{font-family:Comfortaa;font-weight:400;font-style:normal;font-display:swap;src:url(fonts/comfortaa-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:Comfortaa;font-weight:500;font-style:normal;font-display:swap;src:url(fonts/comfortaa-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:Comfortaa;font-weight:700;font-style:normal;font-display:swap;src:url(fonts/comfortaa-latin-700-normal.woff2) format("woff2")}
+:root{--bg1:#fbf8ff;--bg2:#eef3ff;--card:rgba(255,255,255,.62);--edge:rgba(255,255,255,.9);--ink:#26224a;--mute:#625d85;--line:#4a4377;--lav:#cdbff5;--peach:#ffc9b0;--mint:#b4ebd0;--butter:#ffeea3;--sky:#b3dbff;--accent:#5a49b8;--on:#fff;--shadow:0 20px 50px -20px rgba(74,67,119,.35);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg1:#14122c;--bg2:#1b1a3a;--card:rgba(40,37,82,.55);--edge:rgba(255,255,255,.12);--ink:#f0edfb;--mute:#aaa5cc;--line:#d9d3ff;--accent:#c4b8ff;--on:#1a1736;--shadow:0 20px 50px -20px rgba(0,0,0,.6);color-scheme:dark}}
+:root[data-theme="dark"]{--bg1:#14122c;--bg2:#1b1a3a;--card:rgba(40,37,82,.55);--edge:rgba(255,255,255,.12);--ink:#f0edfb;--mute:#aaa5cc;--line:#d9d3ff;--accent:#c4b8ff;--on:#1a1736;--shadow:0 20px 50px -20px rgba(0,0,0,.6);color-scheme:dark}
+*{box-sizing:border-box}
+html{height:100%}body{margin:0;min-height:100%}
+body{background:linear-gradient(160deg,var(--bg1),var(--bg2));color:var(--ink);font:16px/1.6 Comfortaa,system-ui,sans-serif;display:flex;flex-direction:column;overflow-x:hidden;position:relative}
+h1{font:700 1.5rem/1.3 Comfortaa,system-ui,sans-serif;margin:0 0 .4rem;letter-spacing:-.01em}
+p{margin:0 0 1rem;color:var(--mute)}
+/* doodles */
+.doodles{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+.doodles svg{position:absolute;fill:none;stroke:var(--line);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;opacity:.85}
+.d1{width:84px;top:5%;left:6%;animation:float 9s ease-in-out infinite}
+.d2{width:40px;top:9%;right:10%;animation:twinkle 4s ease-in-out infinite}
+.d3{width:30px;top:22%;right:24%;animation:twinkle 5s ease-in-out -2s infinite}
+.d4{width:110px;bottom:20%;left:-14px;animation:float 11s ease-in-out -3s infinite}
+.d5{width:90px;bottom:14%;right:4%;animation:float 10s ease-in-out -5s infinite}
+.d6{width:120px;top:34%;left:-24px;animation:float 12s ease-in-out -1s infinite}
+.d7{width:26px;top:42%;right:6%;animation:twinkle 6s ease-in-out -3s infinite}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-14px) rotate(3deg)}}
+@keyframes twinkle{0%,100%{transform:scale(1) rotate(0);opacity:.85}50%{transform:scale(.8) rotate(12deg);opacity:.45}}
+/* layout */
+main{flex:1;position:relative;z-index:1;width:100%;max-width:32rem;margin:0 auto;padding:2rem 1.2rem 1rem;display:flex;flex-direction:column;justify-content:center}
+section{background:var(--card);backdrop-filter:blur(18px) saturate(1.3);-webkit-backdrop-filter:blur(18px) saturate(1.3);border:1px solid var(--edge);border-radius:28px;padding:1.8rem 1.5rem;box-shadow:var(--shadow);transition:opacity .35s ease,transform .35s cubic-bezier(.22,.8,.3,1)}
+section[hidden]{display:none}
+section.leave{opacity:0;transform:translateY(10px) scale(.985)}
+section.enter{animation:enter .55s cubic-bezier(.22,.8,.3,1) both}
+@keyframes enter{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+.center{text-align:center}
+/* orb */
+.stage{position:relative;width:min(64vw,15rem);aspect-ratio:1;margin:1.6rem auto}
+.orb,.ring{position:absolute;inset:0;border-radius:50%;transform:scale(.62);transition:transform 4s cubic-bezier(.45,.05,.55,.95),opacity 4s ease}
+.orb{background:radial-gradient(circle at 32% 28%,#fff 0,var(--sky) 34%,var(--lav) 68%,var(--peach) 100%);box-shadow:0 18px 50px -10px rgba(120,100,220,.5),inset 0 -10px 30px rgba(255,255,255,.5);display:grid;place-items:center}
+.ring{border:2px solid var(--lav);opacity:0}
+.ring.r2{border-color:var(--mint);transition-delay:.25s}
+.stage.in .orb,.stage.in .ring{transform:scale(1)}
+.stage.in .ring{opacity:.8;transform:scale(1.18)}
+.stage.in .r2{transform:scale(1.36);opacity:.55}
+.stage.out .orb,.stage.out .ring{transition-duration:6s}
+.cue{position:relative;z-index:2;font:500 1.05rem Comfortaa,system-ui,sans-serif;color:#26224a;transition:opacity .3s}
+.cue.swap{opacity:0}
+.stage .cue{position:absolute;inset:0;display:grid;place-items:center}
+/* buttons */
+button{font:500 1rem Comfortaa,system-ui,sans-serif;border:0;cursor:pointer;transition:transform .2s ease,box-shadow .3s ease,background .3s ease}
+.cta{background:linear-gradient(135deg,var(--accent),#8a73e6);color:var(--on);padding:.85rem 2.2rem;border-radius:999px;box-shadow:0 12px 28px -10px var(--accent)}
+.cta:hover{transform:translateY(-2px);box-shadow:0 16px 32px -10px var(--accent)}
+.cta:active{transform:scale(.97)}
+button:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+textarea{width:100%;min-height:9.5rem;font:inherit;background:rgba(255,255,255,.35);color:var(--ink);border:1.5px solid var(--lav);border-radius:18px;padding:1rem;margin-bottom:1rem;resize:vertical;transition:border-color .3s,box-shadow .3s,opacity .8s,filter .8s,transform .8s}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) textarea{background:rgba(0,0,0,.2)}}
+textarea:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(138,115,230,.2)}
+textarea.melt{opacity:0;filter:blur(8px);transform:translateY(-16px)}
+#done{display:flex;align-items:center;gap:.6rem;justify-content:center;margin:1.2rem 0 0;opacity:0;transform:translateY(6px);transition:opacity .5s,transform .5s}
+#done.show{opacity:1;transform:none}
+#done svg{width:26px;fill:var(--butter);stroke:var(--line);stroke-width:2.4;stroke-linejoin:round}
+/* list */
+ul{list-style:none;padding:0;margin:0 0 1rem}
+li{display:flex;gap:.9rem;align-items:flex-start;margin-bottom:.9rem;opacity:0}
+section.enter li{animation:enter .6s cubic-bezier(.22,.8,.3,1) both}
+section.enter li:nth-child(2){animation-delay:.07s}section.enter li:nth-child(3){animation-delay:.14s}section.enter li:nth-child(4){animation-delay:.21s}section.enter li:nth-child(5){animation-delay:.28s}
+li{opacity:1}
+li i{flex:none;width:34px;height:34px;border-radius:12px;border:2px solid var(--line);margin-top:.1rem;display:grid;place-items:center;font-style:normal;font-size:1rem;color:#26224a}
+li:nth-child(1) i{background:var(--peach)}li:nth-child(2) i{background:var(--mint)}li:nth-child(3) i{background:var(--butter)}li:nth-child(4) i{background:var(--sky)}li:nth-child(5) i{background:var(--lav)}
+li b{display:block;font-weight:500}
+li span{color:var(--mute);font-size:.92rem}
+small{display:block;color:var(--mute);font-size:.8rem;line-height:1.5;padding-top:.9rem;border-top:1px dashed var(--lav)}
+.d8{width:92px;top:13%;left:34%;animation:float 10s ease-in-out -2s infinite}
+.d9{width:86px;bottom:9%;left:8%;animation:float 8s ease-in-out -4s infinite}
+.d10{width:112px;bottom:30%;right:-22px;animation:float 11s ease-in-out -6s infinite}
+.doodles{z-index:3}
+.doodles svg{overflow:visible}
+.d1{width:88px;top:2%;left:3%;bottom:auto;right:auto}
+.d2{width:54px;top:3%;right:7%;left:auto}
+.d3{width:44px;top:11%;right:24%;left:auto}
+.d4{width:124px;bottom:13.5%;left:-26px;top:auto}
+.d5{width:92px;bottom:15%;right:-18px;left:auto;top:auto}
+.d6{width:130px;bottom:7.5%;left:-40px;top:auto}
+.d7{width:50px;top:27%;right:3%;left:auto}
+.d8{width:90px;top:1.5%;left:38%}
+.d9{width:84px;bottom:11%;right:30%;left:auto;top:auto}
+.d10{width:108px;bottom:27%;right:-30px;left:auto;top:auto}
+@media (max-height:700px){.d6{display:none}}
+.mo{opacity:0;transition:opacity .2s}
+.mo-smile{opacity:1}
+[data-mo]:not([data-mo=smile]) .mo-smile{opacity:0}
+[data-mo=big] .mo-big,[data-mo=o] .mo-o,[data-mo=flat] .mo-flat,[data-mo=frown] .mo-frown,[data-mo=grr] .mo-grr,[data-mo=tongue] .mo-tongue{opacity:1}
+.pup{transition:transform .12s;transform:translate(var(--lx,0px),var(--ly,0px))}
+/* pals */
+.pals{margin:.1rem 0 1.1rem}
+.bubble{position:relative;background:#fff;color:#26224a;border:2px solid var(--line);border-radius:18px;padding:.55rem .9rem;font-size:.82rem;line-height:1.45;text-align:center;margin:0 .3rem 1rem;transition:opacity .25s,transform .25s}
+.bubble::after{content:"";position:absolute;left:50%;bottom:-9px;width:14px;height:14px;background:#fff;border-right:2px solid var(--line);border-bottom:2px solid var(--line);transform:translateX(-50%) rotate(45deg)}
+.bubble.swap{opacity:0;transform:translateY(4px)}
+.row{display:flex;align-items:flex-end;justify-content:space-between}
+.pal{width:32%;overflow:visible;fill:none;stroke:var(--line);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.mouth{fill:#3b2b4f;stroke:none;transform-box:fill-box;transform-origin:50% 0;transform:scaleY(var(--open,.15));transition:transform .5s cubic-bezier(.3,1.6,.5,1)}
+.pal-croc{animation:bob 3.2s ease-in-out infinite}
+.pal-hippo{animation:bob 4s ease-in-out -1s infinite}
+@keyframes bob{50%{transform:translateY(-4px)}}
+.pal-hopper.hop{animation:hop .5s cubic-bezier(.3,.7,.4,1)}
+@keyframes hop{40%{transform:translateY(-22px) rotate(-8deg)}100%{transform:none}}
+.pal-croc.chomp .mouth{animation:chomp .4s ease-in-out 2}
+@keyframes chomp{0%,100%{transform:scaleY(.15)}50%{transform:scaleY(1.2)}}
+.pals.eat .pal{animation:squish .9s ease-in-out}
+.pals.eat .pal-hippo .mouth{transform:scaleY(1.3)}
+@keyframes squish{30%{transform:scale(1.08,.9)}60%{transform:scale(.96,1.08)}}
+.f{opacity:0;transition:opacity .3s}
+.f .in{transform-box:fill-box;transform-origin:center}
+.pal text{fill:var(--line);stroke:none;font:700 13px Comfortaa,sans-serif}
+.lid{opacity:0;animation:blink 4.5s infinite}
+.pal-hippo .lid{animation-delay:-1.5s}.pal-hopper .lid{animation-delay:-3s}
+@keyframes blink{0%,94%,100%{opacity:0}96%,98%{opacity:1}}
+[data-fe~=lid] .f-arc{opacity:1}
+[data-fe~=lid] .lid{animation:none;opacity:1}
+[data-fe~=brow] .f-brow{opacity:1}
+[data-fe~=sweat] .f-sweat{opacity:1}
+[data-fe~=tear] .f-tear{opacity:1}
+[data-fe~=heart] .f-heart{opacity:1}
+[data-fe~=star] .f-star{opacity:1}
+[data-fe~=blush] .f-blush{opacity:1}
+[data-fe~=drool] .f-drool{opacity:1}
+[data-fe~=q] .f-q{opacity:1}
+[data-fe~=zz] .f-zz{opacity:1}
+.f-sweat .in{animation:drip 1.4s ease-in infinite}
+.f-tear .in{animation:drip 1.1s ease-in infinite}
+.f-drool .in{animation:drip 1.6s ease-in infinite}
+@keyframes drip{0%{transform:translateY(-2px);opacity:0}30%{opacity:1}100%{transform:translateY(9px);opacity:0}}
+.f-heart .in,.f-zz .in{animation:rise 2s ease-out infinite}
+@keyframes rise{0%{transform:translateY(4px) scale(.6);opacity:0}30%{opacity:1}100%{transform:translateY(-12px) scale(1.1);opacity:0}}
+.f-star .in{animation:tw .9s ease-in-out infinite}
+@keyframes tw{50%{transform:scale(.5) rotate(40deg)}}
+.f-q .in{animation:wob 1s ease-in-out infinite}
+@keyframes wob{50%{transform:rotate(14deg) translateY(-3px)}}
+[data-fx=shake] .pal,[data-fx=shake] .dd{animation:jit .22s linear infinite}
+[data-fx=shiver] .pal,[data-fx=shiver] .dd{animation:jit .1s linear infinite}
+[data-fx=bounce] .pal,[data-fx=bounce] .dd{animation:bnc .5s ease-in-out infinite alternate}
+[data-fx=sway] .pal,[data-fx=sway] .dd{animation:sway 3s ease-in-out infinite alternate}
+@keyframes jit{25%{transform:translateX(-2px) rotate(-1deg)}75%{transform:translateX(2px) rotate(1deg)}}
+@keyframes bnc{to{transform:translateY(-9px)}}
+@keyframes sway{from{transform:rotate(-3deg)}to{transform:rotate(3deg)}}
+.pal.talk{animation:talk .55s ease}
+@keyframes talk{40%{transform:scale(1.12) rotate(-3deg)}}
+.pals[data-fx] .pal.talk{animation:talk .55s ease}
+.doodles svg{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.pal,.sc,.stage{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.pal-hippo.chomp .mouth{animation:chomp .5s ease-in-out 2}
+.bit{position:fixed;width:9px;height:9px;border-radius:50%;pointer-events:none;z-index:9}
+.tip{width:max-content;position:fixed;z-index:10;pointer-events:none;max-width:68vw;text-align:center;background:#fff;color:#26224a;border:2px solid var(--line);border-radius:14px;padding:.35rem .75rem;font:700 .78rem/1.35 Comfortaa,sans-serif;box-shadow:0 8px 20px -8px rgba(74,67,119,.5)}
+/* tonight scenes */
+.sc{flex:none;width:96px;height:64px;overflow:visible;fill:none;stroke:var(--line);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.sc text{fill:var(--line);stroke:none;font:700 9px Comfortaa,sans-serif}
+.sc g,.sc ellipse,.sc rect,.sc circle,.sc text{transform-box:fill-box;transform-origin:center}
+.s1h{transform-origin:50% 100%;animation:s1h 5s ease-in-out infinite}
+@keyframes s1h{0%,25%{transform:translateY(8px)}40%{transform:translateY(-14px) rotate(-6deg) scaleY(1.08)}50%,80%{transform:translateY(-9px)}95%,100%{transform:translateY(8px)}}
+.s1b{animation:s1b 5s ease-in-out infinite}
+@keyframes s1b{0%,25%{transform:none}40%,80%{transform:translateX(22px)}95%,100%{transform:none}}
+.s1al{animation:s1al 5s infinite}
+@keyframes s1al{0%,30%{opacity:1}40%,92%{opacity:0}100%{opacity:1}}
+.shk{animation:shk .18s linear infinite}
+@keyframes shk{25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+.s2g{animation:s2g 6s ease-in-out infinite}
+@keyframes s2g{0%,15%{transform:none}25%{transform:translate(24px,-26px) rotate(-10deg)}35%,75%{transform:translate(48px,-5px)}85%{transform:translate(24px,-26px) rotate(8deg)}95%,100%{transform:none}}
+.s3c{animation:s3c 5s ease-in-out infinite}
+@keyframes s3c{0%,18%{transform:none;opacity:1}38%{transform:translateX(-42px) scale(.3);opacity:0}80%{transform:translateX(-42px) scale(.3);opacity:0}100%{transform:none;opacity:1}}
+.s3m{animation:s3m 5s ease-in-out infinite}
+@keyframes s3m{0%,22%{transform:scaleY(.1)}32%{transform:scaleY(1.3)}42%,100%{transform:scaleY(.1)}}
+.s3t{animation:s3t 5s infinite;opacity:0}
+@keyframes s3t{38%{opacity:0;transform:translateY(4px)}48%,62%{opacity:1;transform:none}72%{opacity:0}}
+.s4{animation:s4 6s ease-in-out infinite}
+@keyframes s4{0%,55%{transform:none;opacity:1}70%{transform:translateX(70px) rotate(25deg);opacity:0}71%{transform:translateX(-70px);opacity:0}88%,100%{transform:none;opacity:1}}
+.s4c{animation:s4j .14s linear infinite}
+@keyframes s4j{25%{transform:translate(1.6px,-1px)}75%{transform:translate(-1.6px,1px)}}
+.s4p{animation:s4p .9s ease-in-out infinite}
+@keyframes s4p{50%{transform:translateX(2.4px)}}
+.s4s{animation:s4s 1.6s ease-in infinite}
+@keyframes s4s{0%{transform:translateY(4px);opacity:0}40%{opacity:1}100%{transform:translateY(-8px);opacity:0}}
+.s4n{animation:s4n 1.2s ease-in-out infinite}
+@keyframes s4n{50%{transform:scale(1.12)}}
+.s5f{transform-box:view-box;transform-origin:96px 32px;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.s5d{animation:s5d 6s ease-in-out infinite}
+@keyframes s5d{0%,8%{opacity:0}28%,88%{opacity:.55}100%{opacity:0}}
+.s5h{transform-origin:50% 100%;animation:br 2.8s ease-in-out infinite}
+@keyframes br{50%{transform:scale(1.04,1.08)}}
+.s5z{animation:s5z 2.8s ease-out infinite;opacity:0}
+.s5z.z2{animation-delay:1.4s}
+@keyframes s5z{0%{transform:translate(0,6px);opacity:0}30%{opacity:1}100%{transform:translate(10px,-18px);opacity:0}}
+li{align-items:center}
+/* nav */
+nav{position:sticky;bottom:.5rem;z-index:5;display:flex;width:min(92%,22rem);margin:0 auto 1.1rem;padding:5px;border-radius:999px;background:var(--card);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid var(--edge);box-shadow:var(--shadow)}
+nav .pill{position:absolute;top:5px;bottom:5px;left:5px;width:calc((100% - 10px)/3);border-radius:999px;background:linear-gradient(135deg,var(--lav),var(--sky));transition:transform .5s cubic-bezier(.65,0,.25,1)}
+nav button{position:relative;flex:1;background:none;color:var(--mute);padding:.65rem 0;border-radius:999px}
+nav button[aria-current=true]{color:#26224a}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<symbol id="croc" viewBox="0 0 100 70"><path d="M4 44l10-14v20z" fill="var(--mint)"/><rect x="10" y="26" width="62" height="28" rx="14" fill="var(--mint)"/><rect x="58" y="32" width="38" height="18" rx="9" fill="var(--mint)"/><path d="M22 26l4-7 4 7M36 26l4-7 4 7M50 26l4-7 4 7" fill="var(--mint)"/><rect x="24" y="52" width="9" height="10" rx="4" fill="var(--mint)"/><rect x="50" y="52" width="9" height="10" rx="4" fill="var(--mint)"/><circle cx="64" cy="30" r="5" fill="#fff"/><circle cx="65" cy="30" r="1.8" fill="var(--line)"/><path d="M70 50l3-4 3 4 3-4 3 4 3-4 3 4"/></symbol>
+<symbol id="hippo" viewBox="0 0 100 70"><rect x="10" y="22" width="60" height="32" rx="16" fill="var(--lav)"/><rect x="18" y="52" width="10" height="11" rx="4" fill="var(--lav)"/><rect x="40" y="52" width="10" height="11" rx="4" fill="var(--lav)"/><rect x="46" y="28" width="48" height="30" rx="15" fill="var(--peach)"/><circle cx="56" cy="25" r="6" fill="var(--lav)"/><circle cx="59" cy="38" r="2.6" fill="var(--line)"/><circle cx="82" cy="38" r="1.6" fill="var(--line)"/><circle cx="89" cy="38" r="1.6" fill="var(--line)"/></symbol>
+<symbol id="hopper" viewBox="0 0 100 70"><path d="M28 40L16 18 8 52 4 56M30 44L22 60M60 46l6 14M52 47l-2 13"/><ellipse cx="46" cy="38" rx="28" ry="11" fill="var(--butter)"/><path d="M30 34q16-9 30 0" fill="var(--mint)"/><circle cx="78" cy="32" r="10" fill="var(--butter)"/><circle cx="81" cy="30" r="3" fill="#fff"/><circle cx="82" cy="30" r="1.2" fill="var(--line)"/><path d="M84 24Q90 10 96 12M80 22Q82 8 88 6"/></symbol>
+</defs></svg>
+<div class="doodles" aria-hidden="true">
+<svg class="d1 dd" data-r="spin" data-q="Shh. The moon is on duty.|Moon says: lights out soon." viewBox="0 0 80 80"><path d="M52 12a30 30 0 1 0 16 46A26 26 0 0 1 52 12z" fill="var(--butter)"/><g class="face" transform="translate(30 44) scale(0.8)" stroke-width="1.6"><circle cx="-5" cy="-2" r="3.4" fill="#fff"/><circle cx="5" cy="-2" r="3.4" fill="#fff"/><circle class="pup" cx="-5" cy="-2" r="1.6" fill="var(--line)" stroke="none"/><circle class="pup" cx="5" cy="-2" r="1.6" fill="var(--line)" stroke="none"/><circle class="lid" cx="-5" cy="-2" r="4.2" fill="var(--butter)" stroke="none"/><circle class="lid" cx="5" cy="-2" r="4.2" fill="var(--butter)" stroke="none"/><path class="f f-arc" d="M-8 -2q3 3 6 0M2 -2q3 3 6 0"/><path class="f f-brow" d="M-9 -7L-2 -4M9 -7L2 -4" stroke-width="2.2"/><ellipse class="f f-blush" cx="-8" cy="4" rx="3" ry="1.8" fill="#ffb3c6" stroke="none"/><ellipse class="f f-blush" cx="8" cy="4" rx="3" ry="1.8" fill="#ffb3c6" stroke="none"/><path class="mo mo-smile" d="M-5 4q5 5 10 0"/><path class="mo mo-big" d="M-6 3h12q-1 8-6 8t-6-8z" fill="#3b2b4f"/><ellipse class="mo mo-o" cx="0" cy="6" rx="2.6" ry="3.4" fill="#3b2b4f"/><path class="mo mo-flat" d="M-4 6h8"/><path class="mo mo-frown" d="M-5 9q5-5 10 0"/><path class="mo mo-grr" d="M-6 8l2-3 2 3 2-3 2 3 2-3 2 3"/><g class="mo mo-tongue"><path d="M-5 4q5 5 10 0"/><ellipse cx="2" cy="8" rx="2.4" ry="3" fill="#ff8fb0"/></g><g class="f f-sweat" transform="translate(11 -8) scale(1)"><path class="in" d="M0 -5C3 0 4 2 0 5-4 2-3 0 0-5z" fill="var(--sky)"/></g><g class="f f-tear" transform="translate(-5 3) scale(1)"><path class="in" d="M0 -4C2 0 3 1.5 0 4-3 1.5-2 0 0-4z" fill="var(--sky)"/></g><g class="f f-heart" transform="translate(11 -10) scale(0.7)"><path class="in" d="M0 3c-2-5-8-3-6 2 1 2 4 4 6 6 2-2 5-4 6-6 2-5-4-7-6-2z" fill="#ffa8c5"/></g><g class="f f-star" transform="translate(-12 -10) scale(0.7)"><path class="in" d="M0-7l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="var(--butter)"/></g><g class="f f-q" transform="translate(-12 -8) scale(1)"><text class="in" text-anchor="middle">?</text></g><g class="f f-zz" transform="translate(12 -9) scale(1)"><text class="in" text-anchor="middle">z</text></g><g class="f f-drool" transform="translate(4 9) scale(1)"><path class="in" d="M0 0q-3 5 0 8 3-3 0-8z" fill="var(--sky)"/></g></g></svg><svg class="d2 dd" data-r="pop" data-q="Make a tiny wish.|Twinkle. Now sleep." viewBox="0 0 40 40"><path d="M20 3l5 12 12 5-12 5-5 12-5-12-12-5 12-5z" fill="var(--peach)"/><g class="face" transform="translate(20 21) scale(0.5)" stroke-width="1.6"><circle cx="-5" cy="-2" r="3.4" fill="#fff"/><circle cx="5" cy="-2" r="3.4" fill="#fff"/><circle class="pup" cx="-5" cy="-2" r="1.6" fill="var(--line)" stroke="none"/><circle class="pup" cx="5" cy="-2" r="1.6" fill="var(--line)" stroke="none"/><circle class="lid" cx="-5" cy="-2" r="4.2" fill="var(--peach)" stroke="none"/><circle class="lid" cx="5" cy="-2" r="4.2" fill="var(--peach)" stroke="none"/><path class="f f-arc" d="M-8 -2q3 3 6 0M2 -2q3 3 6 0"/><path class="f f-brow" d="M-9 -7L-2 -4M9 -7L2 -4" stroke-width="2.2"/><ellipse class="f f-blush" cx="-8" cy="4" rx="3" ry="1.8" fill="#ffb3c6" stroke="none"/><ellipse class="f f-blush" cx="8" cy="4" rx="3" ry="1.8" fill="#ffb3c6" stroke="none"/><path class="mo mo-smile" d="M-5 4q5 5 10 0"/><path class="mo mo-big" d="M-6 3h12q-1 8-6 8t-6-8z" fill="#3b2b4f"/><ellipse class="mo mo-o" cx="0" cy="6" rx="2.6" ry="3.4" fill="#3b2b4f"/><path class="mo mo-flat" d="M-4 6h8"/><path class="mo mo-frown" d="M-5 9q5-5 10 0"/><path class="mo mo-grr" d="M-6 8l2-3 2 3 2-3 2 3 2-3 2 3"/><g class="mo mo-tongue"><path d="M-5 4q5 5 10 0"/><ellipse cx="2" cy="8" rx="2.4" ry="3" fill="#ff8fb0"/></g><g class="f f-sweat" transform="translate(11 -8) scale(1)"><path class="in" d="M0 -5C3 0 4 2 0 5-4 2-3 0 0-5z" fill="var(--sky)"/></g><g class="f f-tear" transform="translate(-5 3) scale(1)"><path class="in" d="M0 -4C2 0 3 1.5 0 4-3 1.5-2 0 0-4z" fill="var(--sky)"/></g><g class="f f-heart" transform="translate(11 -10) scale(0.7)"><path class="in" d="M0 3c-2-5-8-3-6 2 1 2 4 4 6 6 2-2 5-4 6-6 2-5-4-7-6-2z" fill="#ffa8c5"/></g><g class="f f-star" transform="translate(-12 -10) scale(0.7)"><path class="in" d="M0-7l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="var(--butter)"/></g><g class="f f-q" transform="translate(-12 -8) scale(1)"><text class="in" text-anchor="middle">?</text></g><g class="f f-zz" transform="translate(12 -9) scale(1)"><text class="in" text-anchor="middle">z</text></g><g class="f f-drool" transform="translate(4 9) scale(1)"><path class="in" d="M0 0q-3 5 0 8 3-3 0-8z" fill="var(--sky)"/></g></g></svg><svg class="d3 dd" data-r="pop" data-q="Star fact: it is also tired.|Wish granted: calm." viewBox="0 0 40 40"><path d="M20 3l5 12 12 5-12 5-5 12-5-12-12-5 12-5z" fill="var(--mint)"/><g class="face" transform="translate(20 21) scale(0.5)" stroke-width="1.6"><circle cx="-5" cy="-2" r="3.4" fill="#fff"/><circle cx="5" cy="-2" r="3.4" fill="#fff"/><circle class="pup" cx="-5" cy="-2" r="1.6" fill="var(--line)" stroke="none"/><circle class="pup" cx="5" cy="-2" r="1.6" fill="var(--line)" stroke="none"/><circle class="lid" cx="-5" cy="-2" r="4.2" fill="var(--mint)" stroke="none"/><circle class="lid" cx="5" cy="-2" r="4.2" fill="var(--mint)" stroke="none"/><path class="f f-arc" d="M-8 -2q3 3 6 0M2 -2q3 3 6 0"/><path class="f f-brow" d="M-9 -7L-2 -4M9 -7L2 -4" stroke-width="2.2"/><ellipse class="f f-blush" cx="-8" cy="4" rx="3" ry="1.8" fill="#ffb3c6" stroke="none"/><ellipse class="f f-blush" cx="8" cy="4" rx="3" ry="1.8" fill="#ffb3c6" stroke="none"/><path class="mo mo-smile" d="M-5 4q5 5 10 0"/><path class="mo mo-big" d="M-6 3h12q-1 8-6 8t-6-8z" fill="#3b2b4f"/><ellipse class="mo mo-o" cx="0" cy="6" rx="2.6" ry="3.4" fill="#3b2b4f"/><path class="mo mo-flat" d="M-4 6h8"/><path class="mo mo-frown" d="M-5 9q5-5 10 0"/><path class="mo mo-grr" d="M-6 8l2-3 2 3 2-3 2 3 2-3 2 3"/><g class="mo mo-tongue"><path d="M-5 4q5 5 10 0"/><ellipse cx="2" cy="8" rx="2.4" ry="3" fill="#ff8fb0"/></g><g class="f f-sweat" transform="translate(11 -8) scale(1)"><path class="in" d="M0 -5C3 0 4 2 0 5-4 2-3 0 0-5z" fill="var(--sky)"/></g><g class="f f-tear" transform="translate(-5 3) scale(1)"><path class="in" d="M0 -4C2 0 3 1.5 0 4-3 1.5-2 0 0-4z" fill="var(--sky)"/></g><g class="f f-heart" transform="translate(11 -10) scale(0.7)"><path class="in" d="M0 3c-2-5-8-3-6 2 1 2 4 4 6 6 2-2 5-4 6-6 2-5-4-7-6-2z" fill="#ffa8c5"/></g><g class="f f-star" transform="translate(-12 -10) scale(0.7)"><path class="in" d="M0-7l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="var(--butter)"/></g><g class="f f-q" transform="translate(-12 -8) scale(1)"><text class="in" text-anchor="middle">?</text></g><g class="f f-zz" transform="translate(12 -9) scale(1)"><text class="in" text-anchor="middle">z</text></g><g class="f f-drool" transform="translate(4 9) scale(1)"><path class="in" d="M0 0q-3 5 0 8 3-3 0-8z" fill="var(--sky)"/></g></g></svg><svg class="d4 dd" data-r="shake" data-q="Fluffy forecast: 0% worries.|Cloud nine. Population: you." viewBox="0 0 120 70"><path d="M26 58a16 16 0 0 1 2-32 22 22 0 0 1 42-4 18 18 0 0 1 22 18 12 12 0 0 1-2 18z" fill="var(--sky)"/><g class="face" transform="translate(60 40) scale(1.5)" stroke-width="1.6"><circle cx="-5" cy="-2" r="3.4" fill="#fff"/><circle cx="5" cy="-2" r="3.4" fill="#fff"/><circle class="pup" cx="-5" cy="-2" r="1.6" fill="var(--line)" stroke="none"/><circle class="pup" cx="5" cy="-2" r="1.6" fill="var(--line)" stroke="none"/><circle class="lid" cx="-5" cy="-2" r="4.2" fill="var(--sky)" stroke="none"/><circle class="lid" cx="5" cy="-2" r="4.2" fill="var(--sky)" stroke="none"/><path class="f f-arc" d="M-8 -2q3 3 6 0M2 -2q3 3 6 0"/><path class="f f-brow" d="M-9 -7L-2 -4M9 -7L2 -4" stroke-width="2.2"/><ellipse class="f f-blush" cx="-8" cy="4" rx="3" ry="1.8" fill="#ffb3c6" stroke="none"/><ellipse class="f f-blush" cx="8" cy="4" rx="3" ry="1.8" fill="#ffb3c6" stroke="none"/><path class="mo mo-smile" d="M-5 4q5 5 10 0"/><path class="mo mo-big" d="M-6 3h12q-1 8-6 8t-6-8z" fill="#3b2b4f"/><ellipse class="mo mo-o" cx="0" cy="6" rx="2.6" ry="3.4" fill="#3b2b4f"/><path class="mo mo-flat" d="M-4 6h8"/><path class="mo mo-frown" d="M-5 9q5-5 10 0"/><path class="mo mo-grr" d="M-6 8l2-3 2 3 2-3 2 3 2-3 2 3"/><g class="mo mo-tongue"><path d="M-5 4q5 5 10 0"/><ellipse cx="2" cy="8" rx="2.4" ry="3" fill="#ff8fb0"/></g><g class="f f-sweat" transform="translate(11 -8) scale(1)"><path class="in" d="M0 -5C3 0 4 2 0 5-4 2-3 0 0-5z" fill="var(--sky)"/></g><g class="f f-tear" transform="translate(-5 3) scale(1)"><path class="in" d="M0 -4C2 0 3 1.5 0 4-3 1.5-2 0 0-4z" fill="var(--sky)"/></g><g class="f f-heart" transform="translate(11 -10) scale(0.7)"><path class="in" d="M0 3c-2-5-8-3-6 2 1 2 4 4 6 6 2-2 5-4 6-6 2-5-4-7-6-2z" fill="#ffa8c5"/></g><g class="f f-star" transform="translate(-12 -10) scale(0.7)"><path class="in" d="M0-7l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="var(--butter)"/></g><g class="f f-q" transform="translate(-12 -8) scale(1)"><text class="in" text-anchor="middle">?</text></g><g class="f f-zz" transform="translate(12 -9) scale(1)"><text class="in" text-anchor="middle">z</text></g><g class="f f-drool" transform="translate(4 9) scale(1)"><path class="in" d="M0 0q-3 5 0 8 3-3 0-8z" fill="var(--sky)"/></g></g></svg><svg class="d5 dd" data-r="sway" data-q="Fresh air. Crack a window.|Leaf says: breathe." viewBox="0 0 90 90"><path d="M45 82C18 62 12 34 45 8c33 26 27 54 0 74z" fill="var(--mint)"/><path d="M45 82V68"/><g class="face" transform="translate(45 48) scale(1)" stroke-width="1.6"><circle cx="-5" cy="-2" r="3.4" fill="#fff"/><circle cx="5" cy="-2" r="3.4" fill="#fff"/><circle class="pup" cx="-5" cy="-2" r="1.6" fill="var(--line)" stroke="none"/><circle class="pup" cx="5" cy="-2" r="1.6" fill="var(--line)" stroke="none"/><circle class="lid" cx="-5" cy="-2" r="4.2" fill="var(--mint)" stroke="none"/><circle class="lid" cx="5" cy="-2" r="4.2" fill="var(--mint)" stroke="none"/><path class="f f-arc" d="M-8 -2q3 3 6 0M2 -2q3 3 6 0"/><path class="f f-brow" d="M-9 -7L-2 -4M9 -7L2 -4" stroke-width="2.2"/><ellipse class="f f-blush" cx="-8" cy="4" rx="3" ry="1.8" fill="#ffb3c6" stroke="none"/><ellipse class="f f-blush" cx="8" cy="4" rx="3" ry="1.8" fill="#ffb3c6" stroke="none"/><path class="mo mo-smile" d="M-5 4q5 5 10 0"/><path class="mo mo-big" d="M-6 3h12q-1 8-6 8t-6-8z" fill="#3b2b4f"/><ellipse class="mo mo-o" cx="0" cy="6" rx="2.6" ry="3.4" fill="#3b2b4f"/><path class="mo mo-flat" d="M-4 6h8"/><path class="mo mo-frown" d="M-5 9q5-5 10 0"/><path class="mo mo-grr" d="M-6 8l2-3 2 3 2-3 2 3 2-3 2 3"/><g class="mo mo-tongue"><path d="M-5 4q5 5 10 0"/><ellipse cx="2" cy="8" rx="2.4" ry="3" fill="#ff8fb0"/></g><g class="f f-sweat" transform="translate(11 -8) scale(1)"><path class="in" d="M0 -5C3 0 4 2 0 5-4 2-3 0 0-5z" fill="var(--sky)"/></g><g class="f f-tear" transform="translate(-5 3) scale(1)"><path class="in" d="M0 -4C2 0 3 1.5 0 4-3 1.5-2 0 0-4z" fill="var(--sky)"/></g><g class="f f-heart" transform="translate(11 -10) scale(0.7)"><path class="in" d="M0 3c-2-5-8-3-6 2 1 2 4 4 6 6 2-2 5-4 6-6 2-5-4-7-6-2z" fill="#ffa8c5"/></g><g class="f f-star" transform="translate(-12 -10) scale(0.7)"><path class="in" d="M0-7l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="var(--butter)"/></g><g class="f f-q" transform="translate(-12 -8) scale(1)"><text class="in" text-anchor="middle">?</text></g><g class="f f-zz" transform="translate(12 -9) scale(1)"><text class="in" text-anchor="middle">z</text></g><g class="f f-drool" transform="translate(4 9) scale(1)"><path class="in" d="M0 0q-3 5 0 8 3-3 0-8z" fill="var(--sky)"/></g></g></svg><svg class="d6 dd" data-r="wig" data-q="Wheeee! Noodle mode.|Slurp. Worry eaten." viewBox="0 0 130 44"><path d="M4 26c10-18 20 18 30 0s20 18 30 0 20 18 30 0"/><circle cx="108" cy="22" r="15" fill="var(--peach)"/><g class="face" transform="translate(108 23) scale(0.85)" stroke-width="1.6"><circle cx="-5" cy="-2" r="3.4" fill="#fff"/><circle cx="5" cy="-2" r="3.4" fill="#fff"/><circle class="pup" cx="-5" cy="-2" r="1.6" fill="var(--line)" stroke="none"/><circle class="pup" cx="5" cy="-2" r="1.6" fill="var(--line)" stroke="none"/><circle class="lid" cx="-5" cy="-2" r="4.2" fill="var(--peach)" stroke="none"/><circle class="lid" cx="5" cy="-2" r="4.2" fill="var(--peach)" stroke="none"/><path class="f f-arc" d="M-8 -2q3 3 6 0M2 -2q3 3 6 0"/><path class="f f-brow" d="M-9 -7L-2 -4M9 -7L2 -4" stroke-width="2.2"/><ellipse class="f f-blush" cx="-8" cy="4" rx="3" ry="1.8" fill="#ffb3c6" stroke="none"/><ellipse class="f f-blush" cx="8" cy="4" rx="3" ry="1.8" fill="#ffb3c6" stroke="none"/><path class="mo mo-smile" d="M-5 4q5 5 10 0"/><path class="mo mo-big" d="M-6 3h12q-1 8-6 8t-6-8z" fill="#3b2b4f"/><ellipse class="mo mo-o" cx="0" cy="6" rx="2.6" ry="3.4" fill="#3b2b4f"/><path class="mo mo-flat" d="M-4 6h8"/><path class="mo mo-frown" d="M-5 9q5-5 10 0"/><path class="mo mo-grr" d="M-6 8l2-3 2 3 2-3 2 3 2-3 2 3"/><g class="mo mo-tongue"><path d="M-5 4q5 5 10 0"/><ellipse cx="2" cy="8" rx="2.4" ry="3" fill="#ff8fb0"/></g><g class="f f-sweat" transform="translate(11 -8) scale(1)"><path class="in" d="M0 -5C3 0 4 2 0 5-4 2-3 0 0-5z" fill="var(--sky)"/></g><g class="f f-tear" transform="translate(-5 3) scale(1)"><path class="in" d="M0 -4C2 0 3 1.5 0 4-3 1.5-2 0 0-4z" fill="var(--sky)"/></g><g class="f f-heart" transform="translate(11 -10) scale(0.7)"><path class="in" d="M0 3c-2-5-8-3-6 2 1 2 4 4 6 6 2-2 5-4 6-6 2-5-4-7-6-2z" fill="#ffa8c5"/></g><g class="f f-star" transform="translate(-12 -10) scale(0.7)"><path class="in" d="M0-7l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="var(--butter)"/></g><g class="f f-q" transform="translate(-12 -8) scale(1)"><text class="in" text-anchor="middle">?</text></g><g class="f f-zz" transform="translate(12 -9) scale(1)"><text class="in" text-anchor="middle">z</text></g><g class="f f-drool" transform="translate(4 9) scale(1)"><path class="in" d="M0 0q-3 5 0 8 3-3 0-8z" fill="var(--sky)"/></g></g></svg><svg class="d7 dd" data-r="bounce" data-q="Boop!|Boing boing." viewBox="0 0 40 40"><circle cx="20" cy="20" r="16" fill="var(--lav)"/><g class="face" transform="translate(20 21) scale(0.9)" stroke-width="1.6"><circle cx="-5" cy="-2" r="3.4" fill="#fff"/><circle cx="5" cy="-2" r="3.4" fill="#fff"/><circle class="pup" cx="-5" cy="-2" r="1.6" fill="var(--line)" stroke="none"/><circle class="pup" cx="5" cy="-2" r="1.6" fill="var(--line)" stroke="none"/><circle class="lid" cx="-5" cy="-2" r="4.2" fill="var(--lav)" stroke="none"/><circle class="lid" cx="5" cy="-2" r="4.2" fill="var(--lav)" stroke="none"/><path class="f f-arc" d="M-8 -2q3 3 6 0M2 -2q3 3 6 0"/><path class="f f-brow" d="M-9 -7L-2 -4M9 -7L2 -4" stroke-width="2.2"/><ellipse class="f f-blush" cx="-8" cy="4" rx="3" ry="1.8" fill="#ffb3c6" stroke="none"/><ellipse class="f f-blush" cx="8" cy="4" rx="3" ry="1.8" fill="#ffb3c6" stroke="none"/><path class="mo mo-smile" d="M-5 4q5 5 10 0"/><path class="mo mo-big" d="M-6 3h12q-1 8-6 8t-6-8z" fill="#3b2b4f"/><ellipse class="mo mo-o" cx="0" cy="6" rx="2.6" ry="3.4" fill="#3b2b4f"/><path class="mo mo-flat" d="M-4 6h8"/><path class="mo mo-frown" d="M-5 9q5-5 10 0"/><path class="mo mo-grr" d="M-6 8l2-3 2 3 2-3 2 3 2-3 2 3"/><g class="mo mo-tongue"><path d="M-5 4q5 5 10 0"/><ellipse cx="2" cy="8" rx="2.4" ry="3" fill="#ff8fb0"/></g><g class="f f-sweat" transform="translate(11 -8) scale(1)"><path class="in" d="M0 -5C3 0 4 2 0 5-4 2-3 0 0-5z" fill="var(--sky)"/></g><g class="f f-tear" transform="translate(-5 3) scale(1)"><path class="in" d="M0 -4C2 0 3 1.5 0 4-3 1.5-2 0 0-4z" fill="var(--sky)"/></g><g class="f f-heart" transform="translate(11 -10) scale(0.7)"><path class="in" d="M0 3c-2-5-8-3-6 2 1 2 4 4 6 6 2-2 5-4 6-6 2-5-4-7-6-2z" fill="#ffa8c5"/></g><g class="f f-star" transform="translate(-12 -10) scale(0.7)"><path class="in" d="M0-7l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="var(--butter)"/></g><g class="f f-q" transform="translate(-12 -8) scale(1)"><text class="in" text-anchor="middle">?</text></g><g class="f f-zz" transform="translate(12 -9) scale(1)"><text class="in" text-anchor="middle">z</text></g><g class="f f-drool" transform="translate(4 9) scale(1)"><path class="in" d="M0 0q-3 5 0 8 3-3 0-8z" fill="var(--sky)"/></g></g></svg><svg class="d8 dd" data-r="yawn" data-q="Yawwwn. Goodnight.|Hippo is thinking about snacks." viewBox="0 0 100 70"><use href="#hippo"/><circle class="lid" cx="59" cy="38" r="3.8" fill="var(--peach)" stroke="none"/><path class="f f-arc" d="M56 38q3 3 6 0"/><path class="f f-brow" d="M52 31L66 35" stroke-width="3.4"/><g class="f f-sweat" transform="translate(72 28) scale(1)"><path class="in" d="M0 -5C3 0 4 2 0 5-4 2-3 0 0-5z" fill="var(--sky)"/></g><g class="f f-tear" transform="translate(59 45) scale(1)"><path class="in" d="M0 -4C2 0 3 1.5 0 4-3 1.5-2 0 0-4z" fill="var(--sky)"/></g><g class="f f-heart" transform="translate(66 18) scale(0.8)"><path class="in" d="M0 3c-2-5-8-3-6 2 1 2 4 4 6 6 2-2 5-4 6-6 2-5-4-7-6-2z" fill="#ffa8c5"/></g><g class="f f-star" transform="translate(48 20) scale(1)"><path class="in" d="M0-7l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="var(--butter)"/></g><ellipse class="f f-blush" cx="69" cy="45" rx="4" ry="2.4" fill="#ffb3c6" stroke="none"/><g class="f f-drool" transform="translate(84 58) scale(1)"><path class="in" d="M0 0q-3 5 0 8 3-3 0-8z" fill="var(--sky)"/></g><g class="f f-q" transform="translate(76 22) scale(1)"><text class="in" text-anchor="middle">?</text></g><g class="f f-zz" transform="translate(80 24) scale(1)"><text class="in" text-anchor="middle">z</text></g></svg><svg class="d9 dd" data-r="leap" data-q="Boing! Over the worry.|Hop hop hooray." viewBox="0 0 100 70"><use href="#hopper"/><circle class="lid" cx="81" cy="30" r="4.2" fill="var(--butter)" stroke="none"/><path class="f f-arc" d="M77.6 30q3.4 3.4 6.8 0"/><path class="f f-brow" d="M74 22L88 27" stroke-width="3.4"/><g class="f f-sweat" transform="translate(93 24) scale(1)"><path class="in" d="M0 -5C3 0 4 2 0 5-4 2-3 0 0-5z" fill="var(--sky)"/></g><g class="f f-tear" transform="translate(81 37) scale(1)"><path class="in" d="M0 -4C2 0 3 1.5 0 4-3 1.5-2 0 0-4z" fill="var(--sky)"/></g><g class="f f-heart" transform="translate(90 12) scale(0.8)"><path class="in" d="M0 3c-2-5-8-3-6 2 1 2 4 4 6 6 2-2 5-4 6-6 2-5-4-7-6-2z" fill="#ffa8c5"/></g><g class="f f-star" transform="translate(66 14) scale(1)"><path class="in" d="M0-7l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="var(--butter)"/></g><ellipse class="f f-blush" cx="87" cy="38" rx="4" ry="2.4" fill="#ffb3c6" stroke="none"/><g class="f f-q" transform="translate(92 16) scale(1)"><text class="in" text-anchor="middle">?</text></g><g class="f f-zz" transform="translate(94 20) scale(1)"><text class="in" text-anchor="middle">z</text></g></svg><svg class="d10 dd" data-r="chomp" data-q="Chomp. Tasty silence.|Snap! Still hungry." viewBox="0 0 100 70"><use href="#croc"/><circle class="lid" cx="64" cy="30" r="5.8" fill="var(--mint)" stroke="none"/><path class="f f-arc" d="M59 30q5 5 10 0"/><path class="f f-brow" d="M57 22L71 27" stroke-width="3.4"/><g class="f f-sweat" transform="translate(75 20) scale(1)"><path class="in" d="M0 -5C3 0 4 2 0 5-4 2-3 0 0-5z" fill="var(--sky)"/></g><g class="f f-tear" transform="translate(64 37) scale(1)"><path class="in" d="M0 -4C2 0 3 1.5 0 4-3 1.5-2 0 0-4z" fill="var(--sky)"/></g><g class="f f-heart" transform="translate(72 12) scale(0.8)"><path class="in" d="M0 3c-2-5-8-3-6 2 1 2 4 4 6 6 2-2 5-4 6-6 2-5-4-7-6-2z" fill="#ffa8c5"/></g><g class="f f-star" transform="translate(48 16) scale(1)"><path class="in" d="M0-7l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="var(--butter)"/></g><ellipse class="f f-blush" cx="58" cy="38" rx="4" ry="2.4" fill="#ffb3c6" stroke="none"/><g class="f f-q" transform="translate(76 16) scale(1)"><text class="in" text-anchor="middle">?</text></g><g class="f f-zz" transform="translate(78 22) scale(1)"><text class="in" text-anchor="middle">z</text></g></svg>
+</div>
+
+<main>
+<section id="breathe" class="center">
+<h1>Slow your breath</h1>
+<p>Longer out than in. Nothing to get right.</p>
+<div class="stage" id="stage" aria-live="polite">
+<div class="ring"></div><div class="ring r2"></div><div class="orb"></div>
+<div class="cue" id="cue">Ready</div>
+</div>
+<button class="cta" id="go">Start</button>
+</section>
+
+<section id="worry" hidden>
+<h1>Put the worries down</h1>
+<p>Write whatever is circling. Never saved. The doodles will have opinions, and they like being poked.</p>
+<div class="pals" id="pals">
+<div class="bubble" id="bubble">Hippo: Spill it. We have snacks and zero judgment.</div>
+<div class="row">
+<svg class="pal pal-croc" id="crocp" viewBox="0 0 100 70"><use href="#croc"/><ellipse class="mouth" cx="78" cy="49" rx="13" ry="5"/><circle class="lid" cx="64" cy="30" r="5.8" fill="var(--mint)" stroke="none"/><path class="f f-arc" d="M59 30q5 5 10 0"/><path class="f f-brow" d="M57 22L71 27" stroke-width="3.4"/><g class="f f-sweat" transform="translate(75 20) scale(1)"><path class="in" d="M0 -5C3 0 4 2 0 5-4 2-3 0 0-5z" fill="var(--sky)"/></g><g class="f f-tear" transform="translate(64 37) scale(1)"><path class="in" d="M0 -4C2 0 3 1.5 0 4-3 1.5-2 0 0-4z" fill="var(--sky)"/></g><g class="f f-heart" transform="translate(72 12) scale(0.8)"><path class="in" d="M0 3c-2-5-8-3-6 2 1 2 4 4 6 6 2-2 5-4 6-6 2-5-4-7-6-2z" fill="#ffa8c5"/></g><g class="f f-star" transform="translate(48 16) scale(1)"><path class="in" d="M0-7l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="var(--butter)"/></g><ellipse class="f f-blush" cx="58" cy="38" rx="4" ry="2.4" fill="#ffb3c6" stroke="none"/><g class="f f-q" transform="translate(76 16) scale(1)"><text class="in" text-anchor="middle">?</text></g><g class="f f-zz" transform="translate(78 22) scale(1)"><text class="in" text-anchor="middle">z</text></g></svg>
+<svg class="pal pal-hippo" id="hippop" viewBox="0 0 100 70"><use href="#hippo"/><ellipse class="mouth" cx="70" cy="50" rx="16" ry="6"/><circle class="lid" cx="59" cy="38" r="3.8" fill="var(--peach)" stroke="none"/><path class="f f-arc" d="M56 38q3 3 6 0"/><path class="f f-brow" d="M52 31L66 35" stroke-width="3.4"/><g class="f f-sweat" transform="translate(72 28) scale(1)"><path class="in" d="M0 -5C3 0 4 2 0 5-4 2-3 0 0-5z" fill="var(--sky)"/></g><g class="f f-tear" transform="translate(59 45) scale(1)"><path class="in" d="M0 -4C2 0 3 1.5 0 4-3 1.5-2 0 0-4z" fill="var(--sky)"/></g><g class="f f-heart" transform="translate(66 18) scale(0.8)"><path class="in" d="M0 3c-2-5-8-3-6 2 1 2 4 4 6 6 2-2 5-4 6-6 2-5-4-7-6-2z" fill="#ffa8c5"/></g><g class="f f-star" transform="translate(48 20) scale(1)"><path class="in" d="M0-7l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="var(--butter)"/></g><ellipse class="f f-blush" cx="69" cy="45" rx="4" ry="2.4" fill="#ffb3c6" stroke="none"/><g class="f f-drool" transform="translate(84 58) scale(1)"><path class="in" d="M0 0q-3 5 0 8 3-3 0-8z" fill="var(--sky)"/></g><g class="f f-q" transform="translate(76 22) scale(1)"><text class="in" text-anchor="middle">?</text></g><g class="f f-zz" transform="translate(80 24) scale(1)"><text class="in" text-anchor="middle">z</text></g></svg>
+<svg class="pal pal-hopper" id="hopper" viewBox="0 0 100 70"><use href="#hopper"/><circle class="lid" cx="81" cy="30" r="4.2" fill="var(--butter)" stroke="none"/><path class="f f-arc" d="M77.6 30q3.4 3.4 6.8 0"/><path class="f f-brow" d="M74 22L88 27" stroke-width="3.4"/><g class="f f-sweat" transform="translate(93 24) scale(1)"><path class="in" d="M0 -5C3 0 4 2 0 5-4 2-3 0 0-5z" fill="var(--sky)"/></g><g class="f f-tear" transform="translate(81 37) scale(1)"><path class="in" d="M0 -4C2 0 3 1.5 0 4-3 1.5-2 0 0-4z" fill="var(--sky)"/></g><g class="f f-heart" transform="translate(90 12) scale(0.8)"><path class="in" d="M0 3c-2-5-8-3-6 2 1 2 4 4 6 6 2-2 5-4 6-6 2-5-4-7-6-2z" fill="#ffa8c5"/></g><g class="f f-star" transform="translate(66 14) scale(1)"><path class="in" d="M0-7l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="var(--butter)"/></g><ellipse class="f f-blush" cx="87" cy="38" rx="4" ry="2.4" fill="#ffb3c6" stroke="none"/><g class="f f-q" transform="translate(92 16) scale(1)"><text class="in" text-anchor="middle">?</text></g><g class="f f-zz" transform="translate(94 20) scale(1)"><text class="in" text-anchor="middle">z</text></g></svg>
+</div>
+</div>
+<textarea id="t" aria-label="Your worries" placeholder="Tomorrow I need to…"></textarea>
+<button class="cta" id="clear">Clear it</button>
+<div id="done"><svg viewBox="0 0 40 40"><path d="M20 4l4 12 12 4-12 4-4 12-4-12-12-4 12-4z"/></svg><span>Cleared. It will keep till morning.</span></div>
+</section>
+
+<section id="rules" hidden>
+<h1>What actually helps</h1>
+<ul>
+<li><svg class="sc" viewBox="0 0 120 80" aria-hidden="true"><rect x="4" y="58" width="112" height="8" rx="4" fill="var(--sky)"/><rect x="8" y="44" width="24" height="14" rx="7" fill="#fff"/><g class="s1h"><use href="#hippo" x="26" y="14" width="66" height="46"/></g><g class="s1b"><rect x="38" y="42" width="74" height="17" rx="8" fill="var(--lav)"/></g><g class="s1al"><g class="shk"><circle cx="104" cy="20" r="9" fill="var(--butter)"/><path d="M104 20v-5M104 20l4 2M96 10l-4-3M112 10l4-3"/></g></g></svg><div><b>Same wake-up time daily</b><span>Even after a bad night. Hippo rises, so can you.</span></div></li>
+<li><svg class="sc" viewBox="0 0 120 80" aria-hidden="true"><rect x="4" y="60" width="54" height="8" rx="4" fill="var(--sky)"/><rect x="6" y="52" width="16" height="9" rx="4" fill="#fff"/><circle cx="106" cy="26" r="15" fill="var(--butter)" opacity=".55" stroke="none"/><path d="M106 40v24M98 66h16"/><rect x="82" y="56" width="30" height="12" rx="5" fill="var(--peach)"/><g class="s2g"><use href="#hopper" x="16" y="30" width="40" height="28"/></g><text x="46" y="14">20 min</text></svg><div><b>Awake for ~20 minutes?</b><span>Hop out of bed, sit in dim light, return when sleepy.</span></div></li>
+<li><svg class="sc" viewBox="0 0 120 80" aria-hidden="true"><use href="#croc" x="0" y="22" width="66" height="46"/><ellipse class="s3m" cx="54" cy="54" rx="8" ry="4" fill="#3b2b4f" stroke="none" style="transform-origin:50% 0"/><g class="s3c"><circle cx="98" cy="50" r="13" fill="var(--butter)"/><path d="M98 50v-7M98 50l5 3"/></g><text class="s3t" x="40" y="14">gulp!</text></svg><div><b>Hide the clock</b><span>Checking the time feeds the worry. Croc will keep it safe.</span></div></li>
+<li><svg class="sc" viewBox="0 0 120 80" aria-hidden="true"><g class="s4"><g class="s4c"><path class="s4s" d="M42 26q-4-6 0-10M56 26q-4-6 0-10"/><path d="M30 32h38v18a14 14 0 0 1-14 14h-10a14 14 0 0 1-14-14z" fill="var(--peach)"/><path d="M68 38h5a6 6 0 0 1 0 14h-5"/><circle cx="42" cy="46" r="4.5" fill="#fff"/><circle cx="56" cy="46" r="4.5" fill="#fff"/><circle class="s4p" cx="42" cy="46" r="1.7" fill="var(--line)"/><circle class="s4p" cx="56" cy="46" r="1.7" fill="var(--line)"/></g></g><g class="s4n"><circle cx="100" cy="20" r="15" fill="var(--mint)"/><text x="100" y="23" text-anchor="middle">2 pm</text></g></svg><div><b>Last chai or coffee before 2 pm</b><span>After that, your cup should run away.</span></div></li>
+<li><svg class="sc" viewBox="0 0 120 80" aria-hidden="true"><rect x="2" y="4" width="116" height="72" rx="10" fill="var(--sky)" opacity=".4" stroke="none"/><path d="M20 18a9 9 0 1 0 8 12 7 7 0 0 1-8-12z" fill="var(--butter)"/><path d="M96 42v24M88 66h16"/><g class="s5f"><ellipse cx="96" cy="21" rx="4" ry="9" fill="var(--mint)"/><ellipse cx="96" cy="43" rx="4" ry="9" fill="var(--mint)"/><ellipse cx="85" cy="32" rx="9" ry="4" fill="var(--mint)"/><ellipse cx="107" cy="32" rx="9" ry="4" fill="var(--mint)"/></g><circle cx="96" cy="32" r="3" fill="var(--line)"/><g class="s5h"><use href="#hippo" x="18" y="32" width="60" height="42"/></g><text class="s5z" x="66" y="42">z</text><text class="s5z z2" x="72" y="36">Z</text><rect class="s5d" x="2" y="4" width="116" height="72" rx="10" fill="#1a1736" stroke="none"/></svg><div><b>Cool, dark room</b><span>Fan on, lights off, screen away.</span></div></li>
+</ul>
+<small>These are the core of CBT-I, the first-line treatment for long-term insomnia. Not medical advice. If poor sleep lasts over 3 weeks, or you feel unsafe, see a doctor. Free 24x7 support in India: Tele-MANAS 14416.</small>
+</section>
+</main>
+
+<nav id="nav">
+<span class="pill" id="pill"></span>
+<button data-to="breathe" aria-current="true">Breathe</button>
+<button data-to="worry">Worries</button>
+<button data-to="rules">Tonight</button>
+</nav>
+
+<script>
+var stage=document.getElementById('stage'),cue=document.getElementById('cue'),go=document.getElementById('go'),timer=null,on=false;
+function cueSay(t){cue.classList.add('swap');setTimeout(function(){cue.textContent=t;cue.classList.remove('swap');},250);}
+function cycle(){
+  if(!on)return;
+  stage.className='stage in';cueSay('Breathe in');
+  timer=setTimeout(function(){
+    if(!on)return;
+    stage.className='stage out';cueSay('Out, slowly');
+    timer=setTimeout(cycle,6000);
+  },4000);
+}
+function stop(){on=false;clearTimeout(timer);stage.className='stage';cueSay('Ready');go.textContent='Start';}
+go.onclick=function(){if(on){stop();}else{on=true;go.textContent='Stop';requestAnimationFrame(cycle);}};
+
+var btns=[].slice.call(document.querySelectorAll('nav button')),pill=document.getElementById('pill'),current='breathe';
+function show(id){
+  if(id===current)return;
+  stop();
+  var out=document.getElementById(current),inn=document.getElementById(id);
+  out.classList.add('leave');
+  setTimeout(function(){
+    out.hidden=true;out.classList.remove('leave');
+    inn.hidden=false;inn.classList.remove('enter');void inn.offsetWidth;inn.classList.add('enter');
+  },300);
+  current=id;
+  btns.forEach(function(b,i){
+    var a=b.dataset.to===id;
+    if(a){b.setAttribute('aria-current','true');pill.style.transform='translateX('+(i*100)+'%)';}
+    else b.removeAttribute('aria-current');
+  });
+}
+btns.forEach(function(b){b.onclick=function(){show(b.dataset.to);};});
+
+var t=document.getElementById('t'),done=document.getElementById('done'),pals=document.getElementById('pals'),bub=document.getElementById('bubble'),hopper=document.getElementById('hopper'),crocp=document.getElementById('crocp'),hippop=document.getElementById('hippop'),lastMsg='',lastMood='',lastIdx={};
+var who={C:['Croc',crocp],H:['Hippo',hippop],P:['Hopper',hopper]};
+var M=[
+{k:'sleep',re:/\b(sleep|insomnia|awake|tired|exhausted|nap|sleepy)\b/i,fe:'lid zz',fx:'sway',L:[['H',"Zzz… oh sorry. You are the one who needs the sleep."],['C',"One eye open is my sleep mode. Yours is clearly broken."],['P',"Counting sheep? Count me jumping instead."]]},
+{k:'food',re:/\b(food|hungry|biryani|rosogolla|roll|phuchka|momo|mishti|puchka|pizza|chocolate)\b/i,fe:'drool star',fx:'',open:.9,L:[['H',"You said food. Now I am drooling. Thanks a lot."],['C',"Biryani at midnight? Same. Zero judgment."],['P',"Mishti doi. Say it again. Slowly."]]},
+{k:'angry',re:/\b(angry|hate|furious|irritat\w*|annoy\w*|fight|rude|mad)\b/i,fe:'brow',fx:'shake',L:[['C',"SNAP SNAP! I am fully on your side."],['H',"Deep breath. I have enormous lungs, borrow them."],['P',"Kick it! Gently. Into a pillow."]]},
+{k:'fear',re:/\b(scared|afraid|panic|anxious|anxiety|nervous|worried|fear)\b/i,fe:'sweat',fx:'shiver',L:[['P',"*vibrates at high speed*"],['H',"Sweaty? Same. Hippos make their own sunscreen. You make a nap."],['C',"Scared? Stand behind me. I have 80 teeth."]]},
+{k:'sad',re:/\b(sad|cry|crying|alone|lonely|miss|missing|hurt|breakup)\b/i,fe:'tear',fx:'',L:[['H',"Sending a very large, very soggy hug."],['C',"Even crocodiles cry. Mostly for show, but still."],['P',"We are tiny but loyal. Not going anywhere."]]},
+{k:'shy',re:/\b(embarrass\w*|awkward|cringe|shame|ashamed|blush)\b/i,fe:'blush sweat',fx:'',L:[['C',"Nobody remembers it. They are busy cringing at their own."],['H',"Hiding behind my ears. Works great."],['P',"Cringe is just a spicy memory."]]},
+{k:'think',re:/\b(overthink\w*|what if|maybe|should i|confus\w*)\b/i,fe:'q',fx:'',L:[['P',"What if the what-ifs are wrong? Hmm?"],['H',"Your brain is a squirrel in a washing machine."],['C',"Overthinking is just thinking with extra steps."]]},
+{k:'work',re:/\b(work|job|boss|office|deadline|meeting|client|salary hike)\b/i,fe:'brow sweat',fx:'',L:[['C',"Boss? I will chew his calendar invites."],['P',"Hop over the deadline. It cannot hop back."],['H',"Work will still be there at 9 am. Rude, but true."]]},
+{k:'exam',re:/\b(exam|study|test|marks|result|college|school|assignment)\b/i,fe:'sweat q',fx:'',L:[['P',"I failed a jump once. Still here, still hopping."],['H',"Marks are numbers. I weigh 1500 kg and I am fine."],['C',"Close the book. Sleeping is also studying."]]},
+{k:'money',re:/\b(money|rent|loan|bill|bills|emi|debt|broke)\b/i,fe:'sweat',fx:'shiver',open:.7,L:[['H',"Money at 2 am looks 3x bigger. Sleep fixes the font size."],['C',"I own only teeth. My bank balance is zero worries."],['P',"Sadly, hopping does not pay EMIs."]]},
+{k:'health',re:/\b(health|sick|pain|doctor|fever|ill|headache)\b/i,fe:'heart',fx:'',L:[['H',"That matters. Doctor tomorrow, blanket tonight."],['P',"Please see a real doctor. We are doodles, not MBBS."],['C',"Rest first. I will guard the door. Menacingly."]]},
+{k:'happy',re:/\b(excited|happy|trip|party|wedding|festival|puja|pujo|holiday|vacation|match|exciting)\b/i,fe:'star heart',fx:'bounce',L:[['P',"Party time! Wait… sleep first, party after."],['H',"Pujo mood! Dhak is great, but sleep is better."],['C',"Smiling crocodile. Rare footage. Enjoy."]]},
+{k:'love',re:/\b(love|friend|family|crush|mom|dad|partner|boyfriend|girlfriend|wife|husband)\b/i,fe:'heart blush',fx:'',L:[['P',"Ooh, people stuff. Messy and wonderful."],['H',"Hugs from me. Big ones. Hard to escape."],['C',"I will not bite anyone. Probably."]]}];
+var D={empty:{k:'empty',fe:'',fx:'',L:[['H',"Spill it. We have snacks and zero judgment."],['C',"Type your worries. I only bite them."],['P',"I hear with my knees. Go on."]]},
+short:{k:'short',fe:'',fx:'',L:[['C',"Mm-hm. Keep going."],['H',"Noted. Very dramatic. I love it."],['P',"Is that all? We need MORE worries."]]},
+mid:{k:'mid',fe:'q',fx:'',L:[['H',"Good. Get it all out, big thinker."],['C',"Wow. Your brain runs the night shift."],['P',"Worry soup. Stir well. We will eat it."]]},
+long:{k:'long',fe:'sweat',fx:'shiver',open:1,L:[['H',"This is a LOT. I need a bigger stomach."],['C',"That is not a worry, that is a novel."],['P',"I am dizzy just reading. Keep typing though."]]}};
+function retrig(el,c){el.classList.remove(c);void el.getBoundingClientRect();el.classList.add(c);}
+function say(sp,msg){if(msg===lastMsg)return;lastMsg=msg;bub.classList.add('swap');setTimeout(function(){bub.textContent=who[sp][0]+": "+msg;bub.classList.remove('swap');retrig(who[sp][1],'talk');},220);}
+function pick(m){var n=m.L.length,i=Math.floor(Math.random()*n);if(i===lastIdx[m.k])i=(i+1)%n;lastIdx[m.k]=i;return m.L[i];}
+function detect(v,n){if(!n)return D.empty;for(var i=0;i<M.length;i++){if(M[i].re.test(v))return M[i];}return n<40?D.short:(n<140?D.mid:D.long);}
+document.getElementById('clear').onclick=function(){
+  if(!t.value.trim())return;
+  pals.dataset.fe='';pals.dataset.fx='';pals.dataset.mo='big';pals.classList.add('eat');retrig(crocp,'chomp');say('H',"Om nom nom nom…");
+  t.classList.add('melt');
+  setTimeout(function(){t.value='';t.classList.remove('melt');pals.style.setProperty('--open',.15);done.classList.add('show');pals.dataset.fe='star heart';pals.dataset.fx='bounce';pals.dataset.mo='big';lastMood='clear';chat('clear');
+    var o=[['H',"BURP. Excuse me. Worries gone."],['C',"Tasty. Notes of Monday, hint of regret."],['P',"Delivered to the void. Goodnight!"]][Math.floor(Math.random()*3)];say(o[0],o[1]);},900);
+  setTimeout(function(){pals.classList.remove('eat');},1000);
+};
+t.oninput=function(){
+  done.classList.remove('show');
+  var v=t.value,n=v.trim().length,m=detect(v,n),now=Date.now();lastType=now;ts.push(now);ts=ts.filter(function(x){return x>now-1500;});if(ts.length>=7&&n>0&&now-lastHot>5000){lastHot=now;m=D.hot;lastMood='';}
+  pals.dataset.fe=m.fe;pals.dataset.fx=m.fx;pals.dataset.mo=MO[m.k]||'smile';
+  pals.style.setProperty('--open',m.open!=null?m.open:Math.min(1,.15+n/220));
+  retrig(hopper,'hop');
+  if(/\s$/.test(v))retrig(crocp,'chomp');
+  if(m.k!==lastMood){lastMood=m.k;var l=pick(m);say(l[0],l[1]);chat(m.k);}
+};
+
+var calm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches,cols=['#cdbff5','#ffc9b0','#b4ebd0','#ffeea3','#b3dbff','#ffa8c5'];
+function burst(x,y){if(calm)return;for(var i=0;i<9;i++){var b=document.createElement('i');b.className='bit';b.style.left=x+'px';b.style.top=y+'px';b.style.background=cols[i%6];document.body.appendChild(b);var a=i/9*6.283,d=34+Math.random()*30;b.animate([{transform:'translate(-50%,-50%) scale(1)',opacity:1},{transform:'translate(calc(-50% + '+Math.cos(a)*d+'px),calc(-50% + '+Math.sin(a)*d+'px)) scale(.2)',opacity:0}],{duration:700,easing:'cubic-bezier(.2,.8,.3,1)'}).onfinish=(function(n){return function(){n.remove();};})(b);}}
+function tip(txt,x,y){var d=document.createElement('div');d.className='tip';d.textContent=txt;d.style.left=Math.min(Math.max(x,90),innerWidth-90)+'px';d.style.top=Math.max(y,50)+'px';document.body.appendChild(d);var a=d.animate([{opacity:0,transform:'translate(-50%,-80%)'},{opacity:1,transform:'translate(-50%,-120%)',offset:.2},{opacity:1,transform:'translate(-50%,-130%)',offset:.8},{opacity:0,transform:'translate(-50%,-160%)'}],{duration:1900,easing:'ease-out'});a.onfinish=function(){d.remove();};}
+var R={spin:{d:1000,k:[{transform:'rotate(0) scale(1)'},{transform:'rotate(360deg) scale(1.4)'},{transform:'rotate(720deg) scale(1)'}]},
+pop:{d:650,k:[{transform:'scale(1)'},{transform:'scale(2) rotate(90deg)'},{transform:'scale(1) rotate(180deg)'}]},
+shake:{d:700,k:[{transform:'translateX(0)'},{transform:'translateX(-10px)'},{transform:'translateX(10px)'},{transform:'translateX(-6px)'},{transform:'translateX(0)'}]},
+sway:{d:900,k:[{transform:'rotate(0)'},{transform:'rotate(-28deg)'},{transform:'rotate(24deg)'},{transform:'rotate(0)'}]},
+wig:{d:800,k:[{transform:'skewX(0)'},{transform:'skewX(-20deg) scaleX(1.2)'},{transform:'skewX(20deg)'},{transform:'skewX(0)'}]},
+bounce:{d:700,k:[{transform:'translateY(0) scale(1)'},{transform:'translateY(-46px) scale(.9,1.2)'},{transform:'translateY(0) scale(1.3,.7)'},{transform:'translateY(0) scale(1)'}]},
+yawn:{d:1100,k:[{transform:'scale(1)'},{transform:'scale(1.3,1.35)'},{transform:'scale(1.3,1.35)'},{transform:'scale(1)'}]},
+leap:{d:900,k:[{transform:'translate(0,0) rotate(0)'},{transform:'translate(40px,-90px) rotate(18deg)'},{transform:'translate(80px,0) rotate(0)'},{transform:'translate(0,0)'}]},
+chomp:{d:600,k:[{transform:'scaleX(1)'},{transform:'scaleX(.78)'},{transform:'scaleX(1.2)'},{transform:'scaleX(.85)'},{transform:'scaleX(1)'}]},
+scene:{d:650,k:[{transform:'rotate(0) scale(1)'},{transform:'rotate(-6deg) scale(1.14)'},{transform:'rotate(5deg) scale(1.08)'},{transform:'rotate(0) scale(1)'}]}};
+function react(el,type,e,q){var r=el.getBoundingClientRect(),x=e&&e.clientX?e.clientX:r.left+r.width/2,y=e&&e.clientY?e.clientY:r.top;if(!calm&&R[type]&&el.animate)el.animate(R[type].k,{duration:R[type].d,easing:'ease-in-out',composite:'add'});burst(x,y);tip(q,x,y-8);}
+[].forEach.call(document.querySelectorAll('.dd'),function(el){el.addEventListener('click',function(e){var q=el.dataset.q.split('|');react(el,el.dataset.r,e,q[Math.floor(Math.random()*q.length)]);});});
+var sq=[["5 more minutes!","Hippo rises. Allegedly."],["Boing! Out of bed.","Twenty minutes. Go hop."],["Gulp. What clock?","Croc ate your anxiety."],["Decaf? Never. Run!","Cup is jittery. So are you."],["Click. Lights out.","Fan: whirr. Hippo: zzz."]];
+[].forEach.call(document.querySelectorAll('.sc'),function(el,i){el.addEventListener('click',function(e){react(el,'scene',e,sq[i][Math.floor(Math.random()*2)]);});});
+var pokes={C:["Hey! Teeth are not a keyboard.","Snap! Just kidding.","I am a lover, not a biter. Mostly."],H:["Boop received. Stomach rumbles.","Pet the hippo, do not poke the hippo.","Yawwwn… keep typing."],P:["Boing!","Hop hop. Worry gone?","Tickles! Stop. No, continue."]};
+function poke(sp,e,el,fn){var l=pokes[sp],m=l[Math.floor(Math.random()*3)],g=0;while(m===lastMsg&&g++<4)m=l[Math.floor(Math.random()*3)];fn();say(sp,m);burst(e.clientX,e.clientY);}
+crocp.addEventListener('click',function(e){poke('C',e,crocp,function(){retrig(crocp,'chomp');});});
+hippop.addEventListener('click',function(e){poke('H',e,hippop,function(){retrig(hippop,'chomp');});});
+hopper.addEventListener('click',function(e){poke('P',e,hopper,function(){retrig(hopper,'hop');});});
+document.getElementById('stage').addEventListener('click',function(){go.click();});
+
+var root=document.documentElement,lastType=0,lastHot=0,ts=[];
+var MO={sleep:'flat',food:'tongue',angry:'grr',fear:'o',sad:'frown',shy:'flat',think:'flat',work:'grr',exam:'o',money:'o',health:'smile',happy:'big',love:'smile',empty:'smile',short:'smile',mid:'o',long:'o',clear:'big',hot:'big'};
+D.hot={k:'hot',fe:'sweat blush brow',fx:'shiver',open:.8,L:[['C',"Bro slow down. You are making me HOT."],['H',"It is insane. My ears are sweating."],['P',"Typing speed: illegal. I love it."]]};
+new MutationObserver(function(){root.dataset.fe=pals.dataset.fe||'';root.dataset.fx=pals.dataset.fx||'';root.dataset.mo=pals.dataset.mo||'smile';}).observe(pals,{attributes:true});
+var GL={empty:["Say something, bro. Anything.","I am here. Judging. Lovingly."],idle:["Bro, what are you doing?","Hello? Typing is free.","I am bored. Entertain me."],short:["Bro, what are you doing?","That is it?! Okay.","Hmm. Suspiciously calm."],mid:["Okay now it is getting insane.","You are cooking, bro. I am hot.","Whoa, plot twist incoming."],long:["BRO. It is insane!","You make me HOT. Open a window!","That is not a worry, that is a saga."],hot:["Slow down! You make me hot, bro!","Insane typing speed. I am sweating.","Bro, my face is melting."],sleep:["Bro, go to bed. Why are we awake?","It is insane how tired I am too.","Shhh. Eyes closed. We will guard you."],food:["You make me hungry, bro.","Insane. Biryani at midnight? Invite me.","Bro what are you doing to me? I am drooling."],angry:["Bro what are you DOING?! I am so hot!","Calm down, you are overheating the page!","Okay, that is insane. Breathe, bro."],fear:["Bro, you are making me sweat!","It is okay, bro. Just breathe.","Insane levels of nerves. Same."],sad:["Aww, bro. Come here.","That is rough. We got you.","Group hug! Everyone. Now."],shy:["Bro that is SO awkward. I love it.","You make me blush! Stop it.","Insane cringe. Respect."],think:["Bro, you are overthinking. Insane.","What if you just… stop? Hmm?","My brain hurts. Yours too?"],work:["Bro, it is night! Boss is asleep!","Work is insane. Sleep is sane.","Calendar invites: eaten."],exam:["You make me nervous, bro!","Insane study vibes. Take a break.","Marks are just numbers, bro."],money:["Money is insane, bro. Sleep on it.","Bro what are you doing to my wallet?","Gulp. That is a lot of rupees."],health:["Take care, bro. Seriously.","Doctor tomorrow. Blanket tonight.","We worry for you. In a cute way."],happy:["You make me hot! Party hot!","It is insane! I love it!","Bro that is so exciting!"],love:["Ooh la la! Spill more!","You make me blush, bro!","Awww. Insane levels of cute."],clear:["Bro that was insane. Gone!","Worries deleted. You are a legend.","Burp. Cleaner already."]};
+function chat(k){var L=GL[k];if(!L)return;var els=[].filter.call(document.querySelectorAll('.dd'),function(e){var r=e.getBoundingClientRect();return r.right>30&&r.left<innerWidth-30&&r.bottom>30&&r.top<innerHeight-60;});els.sort(function(){return Math.random()-.5;});els.slice(0,2).forEach(function(el,i){setTimeout(function(){react(el,el.dataset.r,null,L[Math.floor(Math.random()*L.length)]);},350+i*700);});}
+document.addEventListener('pointermove',function(e){root.style.setProperty('--lx',((e.clientX/innerWidth-.5)*3).toFixed(2)+'px');root.style.setProperty('--ly',((e.clientY/innerHeight-.5)*3).toFixed(2)+'px');});
+document.querySelector('[data-to=worry]').addEventListener('click',function(){setTimeout(function(){if(!t.value.trim())chat('empty');},1300);});
+setInterval(function(){if(!document.getElementById('worry').hidden&&Date.now()-lastType>7000){chat('idle');lastType=Date.now();}},8000);
+
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol)){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}
+</script>
+</body>
+</html>
